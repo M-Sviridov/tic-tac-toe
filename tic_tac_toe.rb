@@ -100,13 +100,25 @@ class Game
   end
 end
 
+# Adding a method to the Object class to check if variable is number
+class Object
+  def number?
+    to_f.to_s == to_s || to_i.to_s == to_s
+  end
+end
+
 player1 = Players.new
 print 'Player 1, enter your name: '
 name = gets.chomp
 player1.name = name
 
-print "#{player1.name}, enter your marker: "
+print "#{player1.name}, enter your marker (anything except digits): "
 marker = gets.chomp
+while marker.strip.number?
+  print "#{player1.name}, enter correct marker (anything except digits): "
+  marker = gets.chomp
+  player1.marker = marker
+end
 player1.marker = marker
 
 player2 = Players.new
@@ -114,8 +126,13 @@ print 'Player 2, enter your name: '
 name = gets.chomp
 player2.name = name
 
-print "#{player2.name}, enter your marker: "
+print "#{player2.name}, enter your marker (anything except digits): "
 marker = gets.chomp
+while marker.strip.number?
+  print "#{player2.name}, enter correct marker (anything except digits): "
+  marker = gets.chomp
+  player2.marker = marker
+end
 player2.marker = marker
 print "\n"
 
