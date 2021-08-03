@@ -1,79 +1,25 @@
 # frozen_string_literal: true
 
-# Module represeting the rules of the game (valid moves, who is winner...)
-module GameRules
-  def check_player1_move(player1_selection)
-    valid = true
-    if @board[player1_selection - 1] == @player1.marker ||
-       @board[player1_selection - 1] == @player2.marker
-      valid = false
-    elsif player1_selection < 1 || player1_selection > 9
-      valid = false
-    end
-    valid
-  end
-
-  def check_player2_move(player2_selection)
-    valid = true
-    if @board[player2_selection - 1] == @player1.marker ||
-       @board[player2_selection - 1] == @player2.marker
-      valid = false
-    elsif player2_selection < 1 || player2_selection > 9
-      valid = false
-    end
-    valid
-  end
-
-  def check_if_winner
-    winner = false
-    winning_combinations = [
-      [board[0], board[1], board[2]], [board[3], board[4], board[5]],
-      [board[6], board[7], board[8]], [board[0], board[3], board[6]],
-      [board[1], board[4], board[7]], [board[2], board[5], board[8]],
-      [board[0], board[4], board[8]], [board[6], board[4], board[2]]
-    ]
-    winning_combinations.each do |combination|
-      winner = true if combination.all? { |x| x == combination[0] }
-    end
-    winner
-  end
-end
-
-# Class representing a player of the game
-class Players
-  attr_accessor :name, :marker
-end
-
-# Class representing the action of playing the game
+require_relative 'game_rules'
+require_relative 'board'
+require_relative 'players'
+require 'pry'
+# Class representing the game
 class Game
-  include GameRules
-
-  attr_accessor :board
-  attr_reader :winning_combinations
-
   def initialize(player1, player2)
-    @board = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     @player1 = player1
     @player2 = player2
   end
 
-  def print_board
-    puts " #{@board[0]} | #{@board[1]} | #{@board[2]} "
-    puts '-----------'
-    puts " #{@board[3]} | #{@board[4]} | #{@board[5]} "
-    puts '-----------'
-    puts " #{@board[6]} | #{@board[7]} | #{@board[8]}\n "
-  end
-
   def play_game
-    while check_if_winner == false
+    while game_rules.winner? == false
       player1_play
       print_board
-      return print "#{@player1.name} is the winner!\n" if check_if_winner
+      return print "#{@player1.name} is the winner!\n" if game_rules.winner?
 
       player2_play
       print_board
-      return print "#{@player2.name} is the winner!\n" if check_if_winner
+      return print "#{@player2.name} is the winner!\n" if game_rules.winner?
     end
   end
 
@@ -136,6 +82,9 @@ end
 player2.marker = marker
 print "\n"
 
+binding.pry
+
 game = Game.new(player1, player2)
-game.print_board
-game.play_game
+board = Board.new
+board.print_board
+# game.play_game
